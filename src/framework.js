@@ -1,27 +1,46 @@
 export function createElement(type, props, ...children) {
-    return { type, props: props || {}, children };
+    if (typeof type === "function") {
+        return type();
+    }
+    return {
+        type,
+        props: {
+            ...props,
+            children: children.map(child =>
+                typeof child === "object"
+                    ? child
+                    : createTextElement(child)
+            ),
+        },
+    }
+}
+
+function createTextElement(text) {
+    return {
+        type: "TEXT_ELEMENT",
+        props: {
+            nodeValue: text,
+            children: [],
+        },
+    }
 }
 
 export function render(element, container) {
-    console.log(element, container)
-    const dom = typeof element === "string"//checks if element is just a string
-        ? document.createTextNode(element)
-        : document.createElement(element.type);
+    const dom =
+        element.type == "TEXT_ELEMENT"
+            ? document.createTextNode("")
+            : document.createElement(element.type)
 
-    const isProperty = key => key !== "children";
-    if (element.props) {
-        Object.keys(element.props)
-            .filter(isProperty)
-            .forEach(name => {
-                console.log(name, element.props[name], dom)
-                dom[name] = element.props[name];
-            });
-    }
-    if (element.children) {
-        element.children.forEach(child =>
-            render(child, dom)
-        );
-    }
-    console.log(dom)
-    container.appendChild(dom);
+    const isProperty = key => key !== "children"
+    Object.keys(element.props)
+        .filter(isProperty)
+        .forEach(name => {
+            dom[name] = element.props[name]
+        })
+
+    element.props.children.forEach(child =>
+        render(child, dom)
+    )
+
+    container.appendChild(dom)
 }
