@@ -77,10 +77,15 @@ function updateDom(dom, prevProps, nextProps) {
         .filter(isProperty)
         .filter(isNew(prevProps, nextProps))
         .forEach(name => {
+            // console.log(name, typeof nextProps[name], nextProps[name])
             if (name === "class") {
                 dom.className = nextProps[name]
             } else if (name in dom) {
                 dom[name] = nextProps[name]
+                if (name === "style") {
+                    //dom.style.color = 'yellow'
+                    console.log(dom)
+                }
             } else {
                 dom.setAttribute(name, nextProps[name])
             }

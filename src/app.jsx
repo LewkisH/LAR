@@ -5,7 +5,7 @@ let hello = 'yolo'
 let taskId = 1
 
 const App = <body>
-<section class="todoapp" amogus="su ema" >
+<section class="todoapp" amogus="su ema">
     <header class="header">
         <h1>todos</h1>
         <input class="new-todo" placeholder="What needs to be done?" autofocus/>
@@ -21,7 +21,7 @@ const App = <body>
         <span class="todo-count">
             <strong></strong>
         </span>
-        <ul class="filters">
+        <ul class="filters" style="display: block">
             <li>
                 <a href="#/all">All</a>
             </li>
