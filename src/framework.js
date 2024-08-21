@@ -63,7 +63,13 @@ function updateDom(dom, prevProps, nextProps) {
         .filter(isProperty)
         .filter(isGone(prevProps, nextProps))
         .forEach(name => {
-            dom[name] = ""
+            if (name === "class") {
+                dom.removeAttribute("class")
+            } else if (name in dom) {
+                dom[name] = ""
+            } else {
+                dom.removeAttribute(name)
+            }
         })
 
     // Set new or changed properties
@@ -71,7 +77,13 @@ function updateDom(dom, prevProps, nextProps) {
         .filter(isProperty)
         .filter(isNew(prevProps, nextProps))
         .forEach(name => {
-            dom[name] = nextProps[name]
+            if (name === "class") {
+                dom.className = nextProps[name]
+            } else if (name in dom) {
+                dom[name] = nextProps[name]
+            } else {
+                dom.setAttribute(name, nextProps[name])
+            }
         })
 
     // Add event listeners
