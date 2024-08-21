@@ -1,7 +1,9 @@
 import { createElement } from './../framework';
 let count = 0;
-export const Suema = () => 
+
+export const Suema = ({text}) => 
 <div className="ye">
-    yoyoyo
+    {text}
 </div>
+
      

@@ -1,6 +1,6 @@
 export function createElement(type, props, ...children) {
     if (typeof type === "function") {
-        return type();
+        return type(props);
     }
     return {
         type,
