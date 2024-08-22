@@ -13,6 +13,7 @@ export const Active = () => {
     return (
         <ul id="todo-list" className="todo-list">
             {filteredTasks.forEach(task => ( // gpt arvas et map for each asemel aga see tra ei tööta
+
                 <li key={task.id} className={task.completed ? 'completed' : ''} data-id={task.id}>
                     <div className="view">
                         <input

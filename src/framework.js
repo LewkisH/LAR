@@ -233,7 +233,7 @@ export function useState(initial) {
         wipFiber.alternate.hooks[hookIndex]
     const hook = {
         state: oldHook ? oldHook.state : initial,
-        queue: oldHook ? oldHook.queue : [],
+        queue: [],
     }
 
     const actions = oldHook ? oldHook.queue : []
