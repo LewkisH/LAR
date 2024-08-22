@@ -28,7 +28,7 @@ function createDom(fiber) {
             ? document.createTextNode("")
             : document.createElement(fiber.type)
 
-    updateDom(dom, {}, fiber.props)
+    updateDom(dom, {}, fiber.props || {})
 
     return dom
 }
@@ -84,7 +84,7 @@ function updateDom(dom, prevProps, nextProps) {
                 dom[name] = nextProps[name]
                 if (name === "style") {
                     //dom.style.color = 'yellow'
-                    console.log(dom)
+                    // console.log(dom)
                 }
             } else {
                 dom.setAttribute(name, nextProps[name])
@@ -114,6 +114,7 @@ function commitRoot() {
 }
 
 function commitWork(fiber) {
+
     if (!fiber) {
         return
     }
@@ -124,6 +125,7 @@ function commitWork(fiber) {
     }
     const domParent = domParentFiber.dom
 
+    //the effect tags are added in the diffing algorithm
     if (
         fiber.effectTag === "PLACEMENT" &&
         fiber.dom != null
@@ -155,6 +157,9 @@ function commitDeletion(fiber, domParent) {
 }
 
 export function render(element, container) {
+    if (typeof element === "function") {
+        element = element()
+    }
     wipRoot = {
         dom: container,
         props: {
@@ -184,6 +189,7 @@ function workLoop(deadline) {
         commitRoot()
     }
 
+    //requestIdleCallback is a javascript api function that allows you to schedule a function to be called on the next available idle time.
     requestIdleCallback(workLoop)
 }
 
@@ -235,7 +241,7 @@ export function useState(initial) {
         hook.state = action(hook.state)
     })
 
-    const setState = action => {
+    const setState = (action, isRouter, router) => {
         hook.queue.push(action)
         wipRoot = {
             dom: currentRoot.dom,
@@ -244,20 +250,24 @@ export function useState(initial) {
         }
         nextUnitOfWork = wipRoot
         deletions = []
+
     }
 
     wipFiber.hooks.push(hook)
     hookIndex++
+
     return [hook.state, setState]
 }
 
 function updateHostComponent(fiber) {
+
     if (!fiber.dom) {
         fiber.dom = createDom(fiber)
     }
     reconcileChildren(fiber, fiber.props.children)
 }
 
+//diffing algorithm, checks differences between old dom fiber tree and the new one
 function reconcileChildren(wipFiber, elements) {
     let index = 0
     let oldFiber =
@@ -271,11 +281,13 @@ function reconcileChildren(wipFiber, elements) {
         const element = elements[index]
         let newFiber = null
 
+        //are the types (tags) the same
         const sameType =
             oldFiber &&
             element &&
             element.type == oldFiber.type
 
+        //if they are the same type, only change props
         if (sameType) {
             newFiber = {
                 type: oldFiber.type,
@@ -286,6 +298,8 @@ function reconcileChildren(wipFiber, elements) {
                 effectTag: "UPDATE",
             }
         }
+
+        //if the types are different and there is an element (new dom), we need to add a new fiber
         if (element && !sameType) {
             newFiber = {
                 type: element.type,
@@ -296,6 +310,8 @@ function reconcileChildren(wipFiber, elements) {
                 effectTag: "PLACEMENT",
             }
         }
+
+        //if the types are different and there is an old fiber, we need to delete the old one
         if (oldFiber && !sameType) {
             oldFiber.effectTag = "DELETION"
             deletions.push(oldFiber)
@@ -315,3 +331,72 @@ function reconcileChildren(wipFiber, elements) {
         index++
     }
 }
+
+// Routing
+// Räuting
+export function Router(props) {
+
+    const [currentPath, setCurrentPath] = useState(window.location.hash.slice(1) || "/");
+
+    const handleHashChange = () => {
+        setCurrentPath(c => c = window.location.hash.slice(1) || "/", true, this);
+        window.removeEventListener("hashchange", handleHashChange);
+    };
+
+    window.addEventListener("hashchange", handleHashChange);
+
+    const route = props.routes.find(route => route.path === currentPath);
+
+    return route ? route.component.type() : "Not Found";
+}
+
+export function Link(props) {
+    const handleClick = (e) => {
+        e.preventDefault();
+        window.location.hash = props.to;
+    };
+
+    return (
+        <a href={`#${props.to}`} onClick={handleClick}>
+            {props.children[0]}
+        </a >
+    );
+}
+
+
+/* const App = () => {
+    const [currentPath, setCurrentPath] = useState(window.location.hash.slice(1));
+
+    const routes = [
+        { path: "/", component: <All /> },
+        { path: "/all", component: <All /> },
+        { path: "/active", component: <Active /> },
+        { path: "/completed", component: <Completed /> }
+    ];
+
+    const renderComponent = () => {
+        const matchingRoute = routes.find(route => route.path === currentPath);
+        return matchingRoute ? matchingRoute.component : <NotFound />;
+    };
+
+    return (
+        <body>
+            <section className="todoapp">
+                <header className="header">
+                    <h1>todos</h1>
+                    <input className="new-todo" placeholder="What needs to be done?" autoFocus />
+                </header>
+                <main className="main">
+                    <Counter />
+                    <div className="toggle-all-container">
+                        <input className="toggle-all" type="checkbox" />
+                        <label className="toggle-all-label" htmlFor="toggle-all">Mark all as complete</label>
+                    </div>
+                    <ul className="todo-list" id="todo-list">
+                        {renderComponent()}
+                    </ul>
+                </main>
+            </section>
+        </body>
+    );
+}; */
