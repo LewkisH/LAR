@@ -2,6 +2,7 @@ import { createElement, DefineRoutes, Router, Link, useState } from './framework
 import { All } from './components/all'
 import { Active } from './components/active'
 import { Completed } from './components/completed'
+import { FooterButtons } from './components/footer';
 import { NewTask, taskId, tasks } from './components/newtask';
 
 
@@ -26,25 +27,7 @@ return (<body>
             <Router routes={routes} />
         </ul>
     </main>
-    <footer class="footer">
-        <span class="todo-count">
-            <strong></strong>
-        </span>
-        <ul class="filters" style="display: block">
-            <li>
-            <Link to="/">HomeLink</Link>
-            <Link to="/completed">CompletedLink</Link>
-                <a href="#/all">All</a>
-            </li>
-            <li>
-                <a href="#/active" >Active</a>
-            </li>
-            <li>
-                <a href="#/completed">Completed</a>
-            </li>
-        </ul>
-        <button class="clear-completed" style="display: none">Clear completed</button>
-    </footer>
+    <FooterButtons />
 </section>
 <footer class="info">
     <p>Double-click to edit a todo</p>
