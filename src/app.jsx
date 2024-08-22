@@ -2,48 +2,22 @@ import { createElement, DefineRoutes, Router, Link, useState } from './framework
 import { All } from './components/all'
 import { Active } from './components/active'
 import { Completed } from './components/completed'
+import { NewTask, taskId, tasks } from './components/newtask';
 
-
-let hello = 'yoloo'
-
-let taskId = 1
-
-/* const HashRouter = DefineRoutes({
-    '': All,
-    'all': All,
-    'active': Active,
-    'completed': Completed,
-}) */
-
-    function Counter() {
-        const [state, setState] = useState(1)
-        return (
-          <h1 onClick={() => setState(c => c + 1)}>
-            Count: {state}
-          </h1>
-        )
-      }
 
 const App = () => {
-    let tasks = []
-    const [allTasks, changeAllTasks]= useState(tasks)
 
     const routes = [
         { path: "/", component: <All /> },
         { path: "/all", component: <All /> },
-        { path: "/active", component: <Active /> },
+        { path: "/active", component: <Active tasks={tasks} /> },
         { path: "/completed", component: <Completed /> }
       ];
 
 return (<body>
 <section class="todoapp" amogus="su ema">
-    <header class="header">
-
-        <h1>todos</h1>
-        <input class="new-todo" placeholder="What needs to be done?" autofocus/>
-    </header>
+    <NewTask/>
     <main class="main">
-    <Counter />
         <div class="toggle-all-container">
             <input class="toggle-all" type="checkbox"/>
             <label class="toggle-all-label" for="toggle-all">Mark all as complete</label>

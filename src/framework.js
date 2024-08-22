@@ -233,7 +233,7 @@ export function useState(initial) {
         wipFiber.alternate.hooks[hookIndex]
     const hook = {
         state: oldHook ? oldHook.state : initial,
-        queue: [],
+        queue: oldHook ? oldHook.queue : [],
     }
 
     const actions = oldHook ? oldHook.queue : []
@@ -241,8 +241,10 @@ export function useState(initial) {
         hook.state = action(hook.state)
     })
 
-    const setState = (action, isRouter, router) => {
-        hook.queue.push(action)
+    const setState = (action) => {
+        const newState = typeof action === 'function' ? action(hook.state) : action // able to add non functions to state
+
+        hook.queue.push(() => newState) //instead of push added new state
         wipRoot = {
             dom: currentRoot.dom,
             props: currentRoot.props,
