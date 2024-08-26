@@ -1,30 +1,31 @@
-import { createElement, DefineRoutes, Router, Link, useState } from './framework';
+import { LAR } from './framework';
 import { All } from './components/all'
 import { Active } from './components/active'
 import { Completed } from './components/completed'
 import { FooterButtons } from './components/footer';
-import { NewTask, taskId, tasks } from './components/newtask';
-
+import { NewTask } from './components/newtask';
 
 const App = () => {
 
+    const [allTasks, changeAllTasks] = LAR.useState([]);
+
     const routes = [
-        { path: "/", component: <All /> },
-        { path: "/all", component: <All /> },
-        { path: "/active", component: <Active tasks={tasks} /> },
-        { path: "/completed", component: <Completed /> }
+        { path: "/", component: <All/>, prop: {allTasks} },
+        { path: "/all", component: <All/>, prop: {allTasks} },
+        { path: "/active", component: <Active/>, prop: {allTasks} },
+        { path: "/completed", component: <Completed/>, prop: {allTasks} }
       ];
 
 return (<body>
 <section class="todoapp" amogus="su ema">
-    <NewTask/>
+    <NewTask allTasks={allTasks} changeAllTasks={changeAllTasks}/>
     <main class="main">
         <div class="toggle-all-container">
             <input class="toggle-all" type="checkbox"/>
             <label class="toggle-all-label" for="toggle-all">Mark all as complete</label>
         </div>
         <ul class="todo-list" id="todo-list">
-            <Router routes={routes} />
+            <LAR.Router routes={routes} />
         </ul>
     </main>
     <FooterButtons />

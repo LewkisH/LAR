@@ -1,6 +1,6 @@
-import { createElement } from '../framework';
+import { LAR } from '../framework';
 
-export const FooterButtons = () => {
+export const FooterButtons = (props) => {
     return <footer class="footer">
                 <span class="todo-count">
                     <strong></strong>

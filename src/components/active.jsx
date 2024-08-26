@@ -1,9 +1,11 @@
-import { createElement } from '../framework';
-import { useState } from '../framework';
+import {LAR} from '../framework';
 
 import { tasks as newTaskTasks } from './newtask';
 
-export const Active = () => {
+export const Active = (prop) => {
+
+    return <hi>ACTIVE</hi>
+    console.log("ACTIVE", prop)
     // const [allTasks, changeAllTasks] = useState([]);
     
     // console.log("alltasks:",allTasks)

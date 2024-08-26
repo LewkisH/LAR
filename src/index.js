@@ -1,6 +1,8 @@
-import { render } from './framework';
-import App from './app';
+import { LAR } from './framework';
 import '../public/styles.css';
+import App from './App';
+
+let element = <App />
 
 const rootElement = document.getElementById("root");
-render(App, rootElement);
+LAR.render(element, rootElement); 

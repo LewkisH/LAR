@@ -1,13 +1,11 @@
 import { createElement } from '../framework';
-import { useState } from '../framework';
+import { LAR } from '../framework';
 
 let taskId = 1
 
 export let tasks = [];
 
-export const NewTask = () => {
-
-    const [allTasks, changeAllTasks] = useState(tasks);
+export const NewTask = (props) => {
   
     const handleKeyDown = (event) => {
         if (event.key === 'Enter' || event.key === 13) {
@@ -31,12 +29,11 @@ export const NewTask = () => {
             
         taskId++
     
-        changeAllTasks([...allTasks, newTask]);
+        props.changeAllTasks([...props.allTasks, newTask]);
         }
     }
 
-    tasks = allTasks
-    console.log("tasks:",tasks)
+    tasks = props.allTasks
 
     return  <header class="header">
                 <h1>todos</h1>
