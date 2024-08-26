@@ -1,9 +1,7 @@
 import { createElement, LAR } from '../framework';
 
 let taskId = 1
-
 export let tasks = [];
-
 export const NewTask = (props) => {
   
     const handleKeyDown = (event) => {

@@ -85,8 +85,6 @@ function updateDom(dom, prevProps, nextProps) {
         .filter(isProperty)
         .filter(isNew(prevProps, nextProps))
         .forEach(name => {
-
-            // console.log("SETT",name, typeof nextProps[name], nextProps[name])
             if (name === "class") {
                 dom.className = nextProps[name]
             } else if (name in dom) {
@@ -116,7 +114,6 @@ function updateDom(dom, prevProps, nextProps) {
 }
 
 function commitRoot() {
-    console.log("deletions", deletions)
     deletions.forEach(commitWork)
     commitWork(wipRoot.child)
     currentRoot = wipRoot
@@ -279,9 +276,7 @@ function updateHostComponent(fiber) {
     if (!fiber.dom) {
         fiber.dom = createDom(fiber)
         if (fiber.props.ref){
-
             fiber.props.ref.current = fiber.dom
-            console.log(fiber)
         }
     }
     reconcileChildren(fiber, fiber.props.children)

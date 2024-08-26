@@ -7,13 +7,9 @@ import { Tasks } from './components/tasks';
 const App = () => {
 
     const [allTasks, changeAllTasks] = LAR.useState([]);
-
     let active = allTasks.filter(task => task.completed === false)
-
     let showFooter = allTasks.length > 0 ? "block" : "none"
-
     let hasCompletedTasks = allTasks.some(task => task.completed)
-
     let showClearButton = hasCompletedTasks ? "block" : "none"
 
     const routes = [
@@ -22,7 +18,6 @@ const App = () => {
         { path: "/active", component: <Tasks/>, prop: {tasks: allTasks, changeAllTasks, filter:"active"} },
         { path: "/completed", component: <Tasks/>, prop: {tasks: allTasks, changeAllTasks, filter:"completed"} }
       ];
-
 
     function toggleAllCompleted() {
         const areAllCompleted = allTasks.every(task => task.completed);
@@ -42,7 +37,12 @@ return (<body>
             <LAR.Router routes={routes} changeAllTasks={changeAllTasks} />
         </ul>
     </main>
-    <FooterButtons showFooter={showFooter} taskCount={active.length} showClearButton={showClearButton} allTasks={allTasks} changeAllTasks={changeAllTasks}/>
+    <FooterButtons 
+        showFooter={showFooter}
+        taskCount={active.length}
+        showClearButton={showClearButton}
+        allTasks={allTasks}
+        changeAllTasks={changeAllTasks}/>
 </section>
 <footer class="info">
     <p>Double-click to edit a todo</p>
