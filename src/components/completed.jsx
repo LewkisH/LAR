@@ -1,17 +1,20 @@
 import { LAR } from '../framework';
 
 export const Completed = (prop) => {
-    let completed = prop.allTasks.filter(task => task.completed)
+
+    let completed = prop.allTasks.filter(task => task.completed === true)
+
         const rows = []
-        for (let i = 0; i < completed; i++) {
-            rows.push(<li data-id="3">
+        for (let i = 0; i < completed.length; i++) {
+            rows.push(<li>
                         <div class="view">
                             <input class="toggle" type="checkbox"/>
-                            <label>{completed.text}</label>
+                            <label>{completed[i].text}</label>
                             <button class="destroy"></button>
                         </div>
                     </li>)
         }
+
         return (<div>{rows}</div>)
 
 }
