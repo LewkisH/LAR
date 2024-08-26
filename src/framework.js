@@ -1,5 +1,4 @@
 function createElement(type, props, ...children) {
-
     //flattening the children due to how jsx converts children
     const flattenedChildren = children.flat().reduce((acc, child) => {
         if (Array.isArray(child)) {
@@ -116,6 +115,7 @@ function updateDom(dom, prevProps, nextProps) {
 }
 
 function commitRoot() {
+    console.log(deletions)
     deletions.forEach(commitWork)
     commitWork(wipRoot.child)
     currentRoot = wipRoot
@@ -159,6 +159,8 @@ function commitWork(fiber) {
 
 function commitDeletion(fiber, domParent) {
     if (fiber.dom) {
+        console.log("EEMALDUS", fiber)
+        fiber.effectTag = ""
         domParent.removeChild(fiber.dom)
     } else {
         commitDeletion(fiber.child, domParent)
@@ -360,9 +362,7 @@ function Router(props) {
     window.addEventListener("hashchange", handleHashChange);
 
     const route = props.routes.find(route => route.path === currentPath);
-    console.log(route)
     return route ? <div>{route.component.type(route.prop ? route.prop || {} : {})}</div> : "Not Found";
-    return route ? <div>{route.component.type()}</div> : "Not Found";
 }
 
 function Link(props) {
@@ -385,42 +385,3 @@ export const LAR = {
     Router,
     Link,
 }
-
-
-
-/* const App = () => {
-    const [currentPath, setCurrentPath] = useState(window.location.hash.slice(1));
-
-    const routes = [
-        { path: "/", component: <All /> },
-        { path: "/all", component: <All /> },
-        { path: "/active", component: <Active /> },
-        { path: "/completed", component: <Completed /> }
-    ];
-
-    const renderComponent = () => {
-        const matchingRoute = routes.find(route => route.path === currentPath);
-        return matchingRoute ? matchingRoute.component : <NotFound />;
-    };
-
-    return (
-        <body>
-            <section className="todoapp">
-                <header className="header">
-                    <h1>todos</h1>
-                    <input className="new-todo" placeholder="What needs to be done?" autoFocus />
-                </header>
-                <main className="main">
-                    <Counter />
-                    <div className="toggle-all-container">
-                        <input className="toggle-all" type="checkbox" />
-                        <label className="toggle-all-label" htmlFor="toggle-all">Mark all as complete</label>
-                    </div>
-                    <ul className="todo-list" id="todo-list">
-                        {renderComponent()}
-                    </ul>
-                </main>
-            </section>
-        </body>
-    );
-}; */
