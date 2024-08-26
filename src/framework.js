@@ -1,9 +1,18 @@
-export function createElement(type, props, ...children) {
+function createElement(type, props, ...children) {
+
+    //flattening the children due to how jsx converts children
+    const flattenedChildren = children.flat().reduce((acc, child) => {
+        if (Array.isArray(child)) {
+            return [...acc, ...flattenChildren(child)];
+        }
+        return [...acc, child];
+    }, []);
+
     return {
         type,
         props: {
             ...props,
-            children: children.map(child =>
+            children: flattenedChildren.map(child =>
                 typeof child === "object"
                     ? child
                     : createTextElement(child)
@@ -156,7 +165,8 @@ function commitDeletion(fiber, domParent) {
     }
 }
 
-export function render(element, container) {
+function render(element, container) {
+
     if (typeof element === "function") {
         element = element()
     }
@@ -209,6 +219,7 @@ function performUnitOfWork(fiber) {
     let nextFiber = fiber
     while (nextFiber) {
         if (nextFiber.sibling) {
+
             return nextFiber.sibling
         }
         nextFiber = nextFiber.parent
@@ -226,7 +237,8 @@ function updateFunctionComponent(fiber) {
     reconcileChildren(fiber, children)
 }
 
-export function useState(initial) {
+
+function useState(initial) {
     const oldHook =
         wipFiber.alternate &&
         wipFiber.alternate.hooks &&
@@ -336,23 +348,24 @@ function reconcileChildren(wipFiber, elements) {
 
 // Routing
 // Räuting
-export function Router(props) {
+function Router(props) {
 
     const [currentPath, setCurrentPath] = useState(window.location.hash.slice(1) || "/");
 
     const handleHashChange = () => {
-        setCurrentPath(c => c = window.location.hash.slice(1) || "/", true, this);
+        setCurrentPath(c => c = window.location.hash.slice(1) || "/");
         window.removeEventListener("hashchange", handleHashChange);
     };
 
     window.addEventListener("hashchange", handleHashChange);
 
     const route = props.routes.find(route => route.path === currentPath);
-
-    return route ? route.component.type() : "Not Found";
+    console.log(route)
+    return route ? <div>{route.component.type(route.prop ? route.prop || {} : {})}</div> : "Not Found";
+    return route ? <div>{route.component.type()}</div> : "Not Found";
 }
 
-export function Link(props) {
+function Link(props) {
     const handleClick = (e) => {
         e.preventDefault();
         window.location.hash = props.to;
@@ -364,6 +377,15 @@ export function Link(props) {
         </a >
     );
 }
+
+export const LAR = {
+    createElement,
+    render,
+    useState,
+    Router,
+    Link,
+}
+
 
 
 /* const App = () => {

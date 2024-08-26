@@ -2,7 +2,7 @@
     "presets": ["@babel/preset-env", "@babel/preset-react"],
     "plugins": [
     ["@babel/plugin-transform-react-jsx", {
-      "pragma": "createElement" // Default is React.createElement
+      "pragma": "LAR.createElement" // Default is React.createElement
     }]
   ]
   }
