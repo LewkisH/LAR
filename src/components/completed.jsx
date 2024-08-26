@@ -16,5 +16,4 @@ export const Completed = (prop) => {
         }
 
         return (<div>{rows}</div>)
-
 }

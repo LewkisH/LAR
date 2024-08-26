@@ -1,7 +1,5 @@
 import {LAR} from '../framework';
 
-import { tasks as newTaskTasks } from './newtask';
-
 export const Active = (prop) => {
 
     let completed = prop.allTasks.filter(task => task.completed === false)

@@ -1,5 +1,4 @@
-import { createElement } from '../framework';
-import { LAR } from '../framework';
+import { createElement, LAR } from '../framework';
 
 let taskId = 1
 
@@ -28,7 +27,6 @@ export const NewTask = (props) => {
               };
             
         taskId++
-    
         props.changeAllTasks([...props.allTasks, newTask]);
         }
     }

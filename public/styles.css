@@ -56,7 +56,7 @@ body {
 }
 
 .hidden {
-    display: block
+    display: none
 }
 
 .todoapp {
@@ -193,7 +193,7 @@ body {
 }
 
 .todo-list li.editing .view {
-    display: block
+    display: none
 }
 
 .todo-list li .toggle {
@@ -261,7 +261,7 @@ body {
 }
 
 .todo-list li:hover .destroy {
-    display: none
+    display: block
 }
 
 .todo-list li .edit {
