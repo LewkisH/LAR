@@ -85,14 +85,15 @@ function updateDom(dom, prevProps, nextProps) {
         .filter(isProperty)
         .filter(isNew(prevProps, nextProps))
         .forEach(name => {
-            // console.log(name, typeof nextProps[name], nextProps[name])
+
+            // console.log("SETT",name, typeof nextProps[name], nextProps[name])
             if (name === "class") {
                 dom.className = nextProps[name]
             } else if (name in dom) {
                 dom[name] = nextProps[name]
-                if (name === "style") {
-                    //dom.style.color = 'yellow'
-                    // console.log(dom)
+                if (name === "style" && typeof nextProps[name] === "object") {
+                    let keys = Object.keys(nextProps[name])
+                    dom.style[keys[0]] = nextProps[name][keys[0]]
                 }
             } else {
                 dom.setAttribute(name, nextProps[name])
@@ -115,7 +116,7 @@ function updateDom(dom, prevProps, nextProps) {
 }
 
 function commitRoot() {
-    console.log(deletions)
+    console.log("deletions", deletions)
     deletions.forEach(commitWork)
     commitWork(wipRoot.child)
     currentRoot = wipRoot
@@ -158,9 +159,8 @@ function commitWork(fiber) {
 }
 
 function commitDeletion(fiber, domParent) {
+    fiber.effectTag = ""
     if (fiber.dom) {
-        console.log("EEMALDUS", fiber)
-        fiber.effectTag = ""
         domParent.removeChild(fiber.dom)
     } else {
         commitDeletion(fiber.child, domParent)
@@ -276,9 +276,13 @@ function useState(initial) {
 }
 
 function updateHostComponent(fiber) {
-
     if (!fiber.dom) {
         fiber.dom = createDom(fiber)
+        if (fiber.props.ref){
+
+            fiber.props.ref.current = fiber.dom
+            console.log(fiber)
+        }
     }
     reconcileChildren(fiber, fiber.props.children)
 }
@@ -348,8 +352,32 @@ function reconcileChildren(wipFiber, elements) {
     }
 }
 
+let currentRefs = new Map();
+
+function setRef(initialValue = null) {
+    // Generate a unique key for each useRef call
+    const key = Symbol();
+    
+    if (!currentRefs.has(key)) {
+        currentRefs.set(key, { current: initialValue });
+    }  
+
+    function getRef(){
+        wipRoot = {
+            dom: currentRoot.dom,
+            props: currentRoot.props,
+            alternate: currentRoot,
+        }
+        nextUnitOfWork = wipRoot
+        deletions = []
+        return currentRefs.get(key)
+    }
+
+    return getRef
+}
+
+
 // Routing
-// Räuting
 function Router(props) {
 
     const [currentPath, setCurrentPath] = useState(window.location.hash.slice(1) || "/");
@@ -365,23 +393,10 @@ function Router(props) {
     return route ? <div>{route.component.type(route.prop ? route.prop || {} : {})}</div> : "Not Found";
 }
 
-function Link(props) {
-    const handleClick = (e) => {
-        e.preventDefault();
-        window.location.hash = props.to;
-    };
-
-    return (
-        <a href={`#${props.to}`} onClick={handleClick}>
-            {props.children[0]}
-        </a >
-    );
-}
-
 export const LAR = {
     createElement,
     render,
     useState,
     Router,
-    Link,
+    setRef,
 }
