@@ -20,6 +20,7 @@ LAR (Lukas Anti Rain) is a minimalist JavaScript framework inspired by React. It
 - **Component-Based Architecture**: Build encapsulated components that manage their own state and can be reused across your application.
 - **Event Handling**: Easily attach event listeners to elements, enabling interactive user interfaces.
 - **JSX Support**: Compatible with JSX syntax, making it easier to write and understand UI components.
+- **Routing**: A built-in routing system to handle single-page applications (SPAs).
 
 ## How the Framework Works
 
@@ -207,6 +208,96 @@ LAR.render(<Counter />, document.getElementById("root"));
 ```
 
 In this example, the `Counter` component manages its own state, incrementing the count each time the button is clicked.
+
+## Client-Side Routing
+
+LAR also provides a routing system that allows you to handle multiple routes in a single-page application (SPA). The Router component is responsible for rendering different components based on the URL hash.
+
+### Example
+
+```js
+const HomePage = () => {
+    return LAR.createElement("div", null, "Welcome to the Home Page!");
+};
+
+const AboutPage = () => {
+    return LAR.createElement("div", null, "This is the About Page.");
+};
+
+const routes = [
+    { path: "/", component: HomePage },
+    { path: "/about", component: AboutPage }
+];
+
+LAR.render(
+    LAR.createElement(LAR.Router, { routes: routes }),
+    document.getElementById("root")
+);
+```
+
+**JSX Version:**
+
+```jsx
+const HomePage = () => {
+    return <div>Welcome to the Home Page!</div>;
+};
+
+const AboutPage = () => {
+    return <div>This is the About Page.</div>;
+};
+
+const routes = [
+    { path: "/", component: <HomePage /> },
+    { path: "/about", component: <AboutPage /> }
+];
+
+LAR.render(<LAR.Router routes={routes} />, document.getElementById("root"));
+```
+
+## Router Functionality
+
+The Router listens to hash changes in the URL and renders the appropriate component based on the current hash value. When the hash in the URL changes (e.g., #/about), the Router updates the view to render the component associated with the new path.
+
+### Example
+
+```js
+function Router(props) {
+    const [currentPath, setCurrentPath] = LAR.useState(window.location.hash.slice(1) || "/");
+
+    const handleHashChange = () => {
+        setCurrentPath(window.location.hash.slice(1) || "/");
+    };
+
+    window.addEventListener("hashchange", handleHashChange);
+
+    const route = props.routes.find(route => route.path === currentPath);
+
+    return route ? route.component : LAR.createElement("div", null, "Not Found");
+}
+```
+
+**JSX Version:**
+```jsx
+function Router({ routes }) {
+    const [currentPath, setCurrentPath] = LAR.useState(window.location.hash.slice(1) || "/");
+
+    const handleHashChange = () => {
+        setCurrentPath(window.location.hash.slice(1) || "/");
+    };
+
+    window.addEventListener("hashchange", handleHashChange);
+
+    const route = routes.find(route => route.path === currentPath);
+
+    return route ? route.component : <div>Not Found</div>;
+}
+```
+
+### Explanation
+The Router component uses the useState hook to track the current route based on the URL hash.
+It listens for hash changes using window.addEventListener("hashchange").
+When the hash changes, the currentPath state is updated, and the corresponding route's component is rendered.
+If no matching route is found, a "Not Found" message is displayed.
 
 ## Conclusion
 
