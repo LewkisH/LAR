@@ -258,46 +258,6 @@ LAR.render(<LAR.Router routes={routes} />, document.getElementById("root"));
 
 The Router listens to hash changes in the URL and renders the appropriate component based on the current hash value. When the hash in the URL changes (e.g., #/about), the Router updates the view to render the component associated with the new path.
 
-### Example
-
-```js
-function Router(props) {
-    const [currentPath, setCurrentPath] = LAR.useState(window.location.hash.slice(1) || "/");
-
-    const handleHashChange = () => {
-        setCurrentPath(window.location.hash.slice(1) || "/");
-    };
-
-    window.addEventListener("hashchange", handleHashChange);
-
-    const route = props.routes.find(route => route.path === currentPath);
-
-    return route ? route.component : LAR.createElement("div", null, "Not Found");
-}
-```
-
-**JSX Version:**
-```jsx
-function Router({ routes }) {
-    const [currentPath, setCurrentPath] = LAR.useState(window.location.hash.slice(1) || "/");
-
-    const handleHashChange = () => {
-        setCurrentPath(window.location.hash.slice(1) || "/");
-    };
-
-    window.addEventListener("hashchange", handleHashChange);
-
-    const route = routes.find(route => route.path === currentPath);
-
-    return route ? route.component : <div>Not Found</div>;
-}
-```
-
-### Explanation
-The Router component uses the useState hook to track the current route based on the URL hash.
-It listens for hash changes using window.addEventListener("hashchange").
-When the hash changes, the currentPath state is updated, and the corresponding route's component is rendered.
-If no matching route is found, a "Not Found" message is displayed.
 
 ## Conclusion
 
