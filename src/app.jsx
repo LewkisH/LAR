@@ -34,7 +34,7 @@ return (<body>
             <label class="toggle-all-label" for="toggle-all">Mark all as complete</label>
         </div>
         <ul class="todo-list" id="todo-list">
-            <LAR.Router routes={routes} changeAllTasks={changeAllTasks} />
+            <LAR.Router routes={routes} />
         </ul>
     </main>
     <FooterButtons 
